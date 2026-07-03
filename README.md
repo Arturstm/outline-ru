@@ -1,30 +1,32 @@
 # Outline RU
 
-Russian-focused fork of [Outline](https://github.com/outline/outline), a fast
-collaborative knowledge base for teams.
+Русифицированный fork [Outline](https://github.com/outline/outline), быстрой
+корпоративной базы знаний для совместной работы команд.
 
-This repository contains the application source code, Docker build files, and a
-minimal deployment example. The ready-to-run image is published separately to
+В этом репозитории находятся исходный код приложения, Dockerfile для сборки
+образа и минимальный пример запуска. Готовый образ публикуется отдельно в
 GitHub Container Registry:
 
 ```text
 ghcr.io/arturstm/outline-ru:latest
 ```
 
-## What Changed
+## Что Изменено
 
-- Added and improved `ru_RU` locale files.
-- Registered Russian in the language selector.
-- Added Russian date locale support.
-- Added `scripts/check-ru-locale.mjs` to compare Russian and English locale
-  keys.
-- Added a Docker Compose deployment example in `deploy/outline-ru`.
-- Disabled upstream update checks by default for this fork.
-- Removed upstream GitHub workflow files that do not apply to this fork.
+- Добавлена и доработана локализация `ru_RU`.
+- Русский язык добавлен в список языков интерфейса.
+- Добавлена поддержка русской локали для дат.
+- Добавлен `scripts/check-ru-locale.mjs` для сравнения ключей русской и
+  английской локализации.
+- Добавлен пример запуска через Docker Compose в `deploy/outline-ru`.
+- По умолчанию отключена проверка обновлений оригинального Outline.
+- Удалены GitHub workflow-файлы оригинального проекта, которые не нужны в этом
+  fork.
 
-## Quick Start
+## Быстрый Запуск
 
-Use the deployment example if you only need to run the ready image on a server:
+Если нужно просто запустить готовый образ на сервере, используйте пример из
+`deploy/outline-ru`:
 
 ```bash
 cd deploy/outline-ru
@@ -32,42 +34,43 @@ cp .env.example .env
 cp dex-config.yaml.example dex-config.yaml
 ```
 
-Edit `.env` and `dex-config.yaml`, then start the stack:
+Заполните `.env` и `dex-config.yaml`, затем запустите сервисы:
 
 ```bash
 docker compose pull
 docker compose up -d
 ```
 
-See `deploy/outline-ru/README.md` for the full list of required values.
+Полный список обязательных параметров описан в `deploy/outline-ru/README.md`.
 
-## Check Russian Locale
+## Проверка Русской Локализации
 
 ```bash
 node scripts/check-ru-locale.mjs
 ```
 
-The script compares:
+Скрипт сравнивает файлы:
 
 ```text
 shared/i18n/locales/en_US/translation.json
 shared/i18n/locales/ru_RU/translation.json
 ```
 
-It reports missing keys, extra keys, and English fallback values.
+Он показывает отсутствующие ключи, лишние ключи и значения, которые остались на
+английском.
 
-## Build Docker Image Locally
+## Локальная Сборка Docker-Образа
 
-You do not need to build the image to use the deployment example. Build locally
-only when you need to publish a new image version.
+Для запуска примера сборка не нужна: compose использует готовый образ из GHCR.
+Собирайте образ локально только тогда, когда нужно опубликовать новую версию.
 
-Build the base image locally:
+Сборка базового образа:
 
 ```bash
 docker build -f Dockerfile.base -t outline-ru-base:local .
 ```
 
-Build the runtime image:
+Сборка runtime-образа:
 
 ```bash
 docker build \
@@ -75,38 +78,38 @@ docker build \
   -t ghcr.io/arturstm/outline-ru:latest .
 ```
 
-## Push To GitHub Container Registry
+## Публикация В GitHub Container Registry
 
-Login once:
+Авторизация:
 
 ```bash
 export CR_PAT=your_github_token
 echo "$CR_PAT" | docker login ghcr.io -u Arturstm --password-stdin
 ```
 
-Push the runtime image:
+Публикация runtime-образа:
 
 ```bash
 docker push ghcr.io/arturstm/outline-ru:latest
 ```
 
-The image used by servers or Kubernetes is:
+Образ для серверов или Kubernetes:
 
 ```text
 ghcr.io/arturstm/outline-ru:latest
 ```
 
-## Deployment
+## Запуск На Сервере
 
-Deployment files are in:
+Файлы для запуска находятся в:
 
 ```text
 deploy/outline-ru
 ```
 
-See `deploy/outline-ru/README.md`.
+Подробная инструкция: `deploy/outline-ru/README.md`.
 
-## Updating From Upstream
+## Обновление Из Upstream
 
 ```bash
 git fetch upstream
@@ -114,7 +117,7 @@ git checkout main
 git merge upstream/main
 ```
 
-Resolve conflicts, especially in:
+При конфликтах в первую очередь проверьте:
 
 ```text
 shared/i18n/locales/ru_RU/translation.json
@@ -122,19 +125,19 @@ shared/i18n/index.ts
 shared/utils/date.ts
 ```
 
-Then re-run:
+После merge повторно запустите проверку локализации:
 
 ```bash
 node scripts/check-ru-locale.mjs
 ```
 
-Push this fork to GitHub:
+Отправка fork в GitHub:
 
 ```bash
 git push origin main
 ```
 
-## License
+## Лицензия
 
-This fork is based on Outline and remains subject to the original license in
-`LICENSE`.
+Этот fork основан на Outline и распространяется на условиях оригинальной
+лицензии из `LICENSE`.

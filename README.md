@@ -118,12 +118,6 @@ shared/utils/date.ts
 node scripts/check-ru-locale.mjs
 ```
 
-Отправка fork в GitHub:
-
-```bash
-git push origin main
-```
-
 ## Лицензия
 
 Этот fork основан на Outline и распространяется на условиях оригинальной

@@ -86,18 +86,7 @@ The same OIDC client secret must be used in:
 dex-config.yaml: staticClients[0].secret
 ```
 
-## 3. Login To Registry
-
-If the GitHub Container Registry package is private, login on the deployment
-server:
-
-```bash
-docker login ghcr.io
-```
-
-Use a GitHub token with permission to read packages.
-
-## 4. Start
+## 3. Start
 
 ```bash
 docker compose pull
@@ -111,48 +100,16 @@ Open:
 https://your-docs-domain
 ```
 
-## 5. Stop
+## 4. Stop
 
 ```bash
 docker compose down
 ```
 
-## 6. Delete Data
+## 5. Delete Data
 
 ```bash
 docker compose down -v
 ```
 
 Use `down -v` only when you intentionally want to delete all Outline data.
-
-## Updating The Fork
-
-On your development machine:
-
-```bash
-git fetch upstream
-git checkout main
-git merge upstream/main
-```
-
-Resolve conflicts, especially in:
-
-```text
-shared/i18n/locales/ru_RU/translation.json
-shared/i18n/index.ts
-shared/utils/date.ts
-```
-
-Then push:
-
-```bash
-git push origin main
-```
-
-Build and publish the Docker image locally, then deploy the new tag. The
-deployment server only needs to run:
-
-```bash
-docker compose pull
-docker compose up -d
-```

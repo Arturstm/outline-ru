@@ -1,0 +1,13 @@
+{$OUTLINE_HOST} {
+  reverse_proxy outline:3000 {
+    header_up X-Forwarded-Proto https
+    header_up X-Forwarded-Host {host}
+  }
+}
+
+{$DEX_HOST} {
+  reverse_proxy dex:5556 {
+    header_up X-Forwarded-Proto https
+    header_up X-Forwarded-Host {host}
+  }
+}

@@ -1,0 +1,29 @@
+issuer: https://auth.docs.example.com
+
+storage:
+  type: sqlite3
+  config:
+    file: /data/dex.db
+
+web:
+  http: 0.0.0.0:5556
+
+oauth2:
+  skipApprovalScreen: true
+
+staticClients:
+  - id: outline
+    name: Outline
+    secret: change_me_oidc_client_secret
+    redirectURIs:
+      - https://docs.example.com/auth/oidc.callback
+
+enablePasswordDB: true
+
+staticPasswords:
+  - email: admin@example.com
+    # Generate with:
+    # htpasswd -bnBC 10 '' 'your_password' | tr -d ':\n'
+    hash: "$2y$10$replace_with_bcrypt_hash"
+    username: admin
+    userID: "11111111-1111-1111-1111-111111111111"

@@ -78,22 +78,9 @@ docker build \
   -t ghcr.io/arturstm/outline-ru:latest .
 ```
 
-## Публикация В GitHub Container Registry
+## Готовый Образ
 
-Авторизация:
-
-```bash
-export CR_PAT=your_github_token
-echo "$CR_PAT" | docker login ghcr.io -u Arturstm --password-stdin
-```
-
-Публикация runtime-образа:
-
-```bash
-docker push ghcr.io/arturstm/outline-ru:latest
-```
-
-Образ для серверов или Kubernetes:
+Для запуска на сервере используется образ:
 
 ```text
 ghcr.io/arturstm/outline-ru:latest

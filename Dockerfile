@@ -16,7 +16,9 @@ ENV NODE_ENV=production
 
 # Keep Yarn available in the runtime image for operational commands such as
 # database migrations.
-RUN npm install -g corepack@latest && corepack enable
+RUN npm install -g corepack@latest && \
+    corepack enable && \
+    corepack prepare yarn@4.11.0 --activate
 
 # Create a non-root user compatible with Debian and BusyBox based images
 RUN addgroup --gid 1001 nodejs && \
@@ -31,6 +33,8 @@ COPY --from=base --chown=nodejs:nodejs $APP_PATH/public ./public
 COPY --from=base --chown=nodejs:nodejs $APP_PATH/.sequelizerc ./.sequelizerc
 COPY --from=base --chown=nodejs:nodejs $APP_PATH/node_modules ./node_modules
 COPY --from=base --chown=nodejs:nodejs $APP_PATH/package.json ./package.json
+COPY --from=base --chown=nodejs:nodejs $APP_PATH/yarn.lock ./yarn.lock
+COPY --from=base --chown=nodejs:nodejs $APP_PATH/.yarnrc.yml ./.yarnrc.yml
 # Install wget to healthcheck the server
 RUN  apt-get update \
     && apt-get install -y wget \

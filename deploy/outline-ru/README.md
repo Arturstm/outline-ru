@@ -1,8 +1,11 @@
 # Outline RU Deployment
 
-This deployment runs:
+Minimal Docker Compose deployment for running the ready Outline RU image on a
+server.
 
-- Outline RU
+This stack runs:
+
+- Outline with Russian locale available
 - PostgreSQL
 - Redis
 - Dex OIDC login
@@ -17,7 +20,7 @@ docs.example.com
 auth.docs.example.com
 ```
 
-Use your real domains instead of these examples.
+Use real internal or public domains instead of these examples.
 
 ## 2. Prepare Config
 
@@ -26,9 +29,13 @@ cp .env.example .env
 cp dex-config.yaml.example dex-config.yaml
 ```
 
-Edit `.env`:
+Edit `.env`.
+
+Important values:
 
 ```text
+OUTLINE_IMAGE
+APP_NAME
 OUTLINE_HOST
 DEX_HOST
 URL
@@ -40,13 +47,23 @@ OIDC_CLIENT_SECRET
 OIDC_AUTH_URI
 ```
 
+`OUTLINE_IMAGE` must point to the image published in GitHub Container Registry.
+
+Example:
+
+```text
+OUTLINE_IMAGE=ghcr.io/arturstm/outline-ru:latest
+```
+
 Generate secrets:
 
 ```bash
 openssl rand -hex 32
 ```
 
-Edit `dex-config.yaml`:
+Edit `dex-config.yaml`.
+
+Important values:
 
 ```text
 issuer
@@ -69,9 +86,21 @@ The same OIDC client secret must be used in:
 dex-config.yaml: staticClients[0].secret
 ```
 
-## 3. Start
+## 3. Login To Registry
+
+If the GitHub Container Registry package is private, login on the deployment
+server:
 
 ```bash
+docker login ghcr.io
+```
+
+Use a GitHub token with permission to read packages.
+
+## 4. Start
+
+```bash
+docker compose pull
 docker compose up -d
 docker compose logs -f
 ```
@@ -82,13 +111,13 @@ Open:
 https://your-docs-domain
 ```
 
-## 4. Stop
+## 5. Stop
 
 ```bash
 docker compose down
 ```
 
-## 5. Delete Data
+## 6. Delete Data
 
 ```bash
 docker compose down -v
@@ -101,7 +130,6 @@ Use `down -v` only when you intentionally want to delete all Outline data.
 On your development machine:
 
 ```bash
-git remote add upstream https://github.com/outline/outline.git
 git fetch upstream
 git checkout main
 git merge upstream/main
@@ -121,8 +149,10 @@ Then push:
 git push origin main
 ```
 
-GitHub Actions will build and publish:
+Build and publish the Docker image locally, then deploy the new tag. The
+deployment server only needs to run:
 
-```text
-ghcr.io/arturstm/outline-ru:latest
+```bash
+docker compose pull
+docker compose up -d
 ```

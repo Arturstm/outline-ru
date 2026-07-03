@@ -388,7 +388,7 @@ export class Environment {
    */
   @IsBoolean()
   public TELEMETRY = this.toBoolean(
-    environment.ENABLE_UPDATES ?? environment.TELEMETRY ?? "true"
+    environment.ENABLE_UPDATES ?? environment.TELEMETRY ?? "false"
   );
 
   // Third-party services
@@ -873,7 +873,7 @@ export class Environment {
    * The product name
    */
   @Public
-  public APP_NAME = "Outline";
+  public APP_NAME = environment.APP_NAME ?? "Outline";
 
   /**
    * Gravity constant for time decay in popularity scoring. Higher values cause

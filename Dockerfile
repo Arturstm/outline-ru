@@ -1,5 +1,5 @@
 ARG APP_PATH=/opt/outline
-ARG BASE_IMAGE=outlinewiki/outline-base
+ARG BASE_IMAGE=outline-ru-base:local
 FROM ${BASE_IMAGE} AS base
 
 ARG APP_PATH
@@ -8,15 +8,19 @@ WORKDIR $APP_PATH
 # ---
 FROM node:26.3.0-slim AS runner
 
-LABEL org.opencontainers.image.source="https://github.com/outline/outline"
+LABEL org.opencontainers.image.source="https://github.com/Arturstm/outline-ru"
 
 ARG APP_PATH
 WORKDIR $APP_PATH
 ENV NODE_ENV=production
 
+# Keep Yarn available in the runtime image for operational commands such as
+# database migrations.
+RUN npm install -g corepack@latest && corepack enable
+
 # Create a non-root user compatible with Debian and BusyBox based images
 RUN addgroup --gid 1001 nodejs && \
-    adduser --uid 1001 --ingroup nodejs nodejs && \
+    adduser --disabled-password --gecos "" --uid 1001 --ingroup nodejs nodejs && \
     mkdir -p /var/lib/outline && \
     chown -R nodejs:nodejs /var/lib/outline && \
     chown -R nodejs:nodejs $APP_PATH
